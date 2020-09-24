@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const auth = require('../Middleware/auth');
 const admin = require('../Middleware/isadmin');
+const { Error } = require('mongoose');
 
 router.get("/current",auth, async (req,res) => {
 
@@ -13,7 +14,9 @@ router.get("/current",auth, async (req,res) => {
 
 });
 
-router.post('/create',[auth,admin],async (req,res) => {
+router.post('/create',async (req,res) => {
+
+    throw new Error('Cannot Create User.');
 
     const {error} = UserValidation(req.body);
     if(error) return res.status(400).send(error.details[0].message);
@@ -27,6 +30,7 @@ router.post('/create',[auth,admin],async (req,res) => {
     await user.save();
 
     res.send(user);
+
 });
 
 
